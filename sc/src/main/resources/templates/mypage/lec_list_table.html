@@ -1,0 +1,28 @@
+<!-- 혹시 몰라서 저장하기 위한용도 -->
+<!-- 			            <table class="tbl"> -->
+<!-- 			                <thead> -->
+<!-- 			                    <tr> -->
+<!-- 			                        <th style="width: 10%">No</th> -->
+<!-- 			                        <th style="width: 45%">제목</th> -->
+<!-- 			                        <th style="width: 15%">등록일</th> -->
+<!-- 			                        <th style="width: 10%">영상 수</th> -->
+<!-- 			                        <th style="width: 10%">진행률</th> -->
+<!-- 			                        <th style="width: 10%">삭제</th> -->
+<!-- 			                    </tr> -->
+<!-- 			                </thead> -->
+<!-- 						    <tr th:each="entry, loop : ${list.entrySet()}"> -->
+<!-- 							    <td th:text="${loop.index} + 1"></td> -->
+<!-- 							    <td> -->
+<!-- 							        <a th:href="@{|/video/study/list/${entry.key.lecture.id}|}" th:text="${entry.key.lecture.title}"></a> -->
+<!-- 							    </td> -->
+<!-- 							    <td th:text="${#temporals.format(entry.key.regDate, 'yyyy-MM-dd')}"></td> -->
+<!-- 							    <td th:each="progress : ${entry.value.entrySet()}"> -->
+<!-- 							    	<span th:text="${progress.key} + '강'"></span> -->
+<!-- 								</td> -->
+<!-- 								<td th:each="progress : ${entry.value.entrySet()}"> -->
+<!-- 									<span th:text="${progress.value != null ? (progress.value * 100.0 / progress.key == 0 ? '0' : #numbers.formatDecimal((progress.value * 100.0 / progress.key), 0, 1)) : '0'}"> -->
+<!-- 									</span> -->
+<!-- 								</td> -->
+<!-- 							    <td><a th:href="@{|/user/lec/delete/${entry.key.lecture.id}|}" class="btn">삭제</a></td> -->
+<!-- 							</tr> -->
+<!-- 			            </table> -->

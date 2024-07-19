@@ -1,0 +1,204 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+	<style>
+		.input_box label { display: inline-block; width: 130px; }
+	</style>
+	<div id="content" style="min-height: calc(100vh - 80px);">
+		<div class="wrapper">
+			<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 10px;">
+				<h2 style="margin-bottom: 40px;">개인정보수정</h2>
+				<form id="modifyForm" th:action="@{/user/modify}" method="post" enctype="multipart/form-data">
+				    <input type="hidden" name="id" th:value="${user.id}" />
+				    
+				    <!-- 기존 필드들 -->
+				    <div class="input_box">
+				        <label>이름</label>
+				        <input type="text" name="name" th:value="${user.name}" />
+				    </div>
+				    <div class="input_box">
+				        <label>이메일</label>
+				        <input type="email" name="email" th:value="${user.email}" readonly="readonly" style="border: none;" />
+				    </div>
+				    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+					<div class="input_box">
+					    <label>현재 비밀번호</label>
+					    <input type="password" name="currentPassword" id="currentPassword" placeholder="* 필수" required />
+					</div>
+					<div class="input_box">
+					    <label>새 비밀번호</label>
+					    <input type="password" name="newPassword" id="newPassword" />
+					</div>
+					<div class="input_box">
+					    <label>새 비밀번호 확인</label>
+					    <input type="password" id="newPasswordConfirm" />
+					</div>
+				    <div class="input_box">
+				        <label>전화번호</label>
+				        <input type="text" name="tellNumber" th:value="${user.tellNumber}" />
+				        <p style="text-align: right;">-를 빼고 입력해주세요.</p>
+				    </div>
+				    
+				    <!-- 프로필 이미지 업로드 필드 추가 -->
+				    <div class="input_box">
+						<label>프로필 이미지</label>
+						<input type="file" name="profileImage" accept="image/*" onchange="validateImageSize(this);" />
+						<p id="imageError" style="color: red; display: none;"></p>
+					</div>
+				    
+				    <!-- 현재 프로필 이미지 표시 (있는 경우) -->
+				    <div class="input_box" th:if="${user.profileImage != null}">
+				        <label>현재 프로필 이미지</label>
+				        <img th:src="${user.profileImage}" alt="현재 프로필 이미지" style="width: 100px; height: 100px;" />
+				    </div>
+				    
+				    <div class="btn_box" style="flex-direction: column;">
+				        <button class="login-btn" type="submit">수정</button>
+						<a th:href="@{/user/delete/{id}(id=${user.id})}" id="deleteButton" class="btn btn-danger">
+					        <span class="text">회원탈퇴</span>
+					    </a>
+				    </div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	    document.getElementById('deleteButton').addEventListener('click', function(event) {
+	        event.preventDefault();
+	        
+	        var messages = [
+	            '정말로 탈퇴하시겠습니까?',
+	            '모든 데이터가 삭제됩니다. 계속하시겠습니까?',
+	            '복구가 불가능합니다. 그래도 진행하시겠습니까?',
+	            '마지막 경고입니다. 정말 탈퇴하시겠습니까?',
+	            '이 결정은 되돌릴 수 없습니다. 최종적으로 탈퇴하시겠습니까?'
+	        ];
+	        
+	        var currentIndex = 0;
+	        
+	        function showNextConfirm() {
+	            if (currentIndex < messages.length) {
+	                if (confirm(messages[currentIndex])) {
+	                    currentIndex++;
+	                    showNextConfirm();
+	                }
+	            } else {
+	                // 모든 확인을 통과한 경우 실제 삭제 요청을 보냄
+	                deleteUser(/*[[${user.id}]]*/);
+	            }
+	        }
+	        
+	        function deleteUser(userId) {
+	            // CSRF 토큰 가져오기
+	            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+	            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+	            fetch(`/user/delete/${userId}`, {
+	                method: 'DELETE',
+	                headers: {
+	                    'Content-Type': 'application/json',
+	                    [csrfHeader]: csrfToken
+	                },
+	            })
+	            .then(response => {
+	                if (response.ok) {
+	                    return response.text();
+	                }
+	                throw new Error('Network response was not ok.');
+	            })
+	            .then(data => {
+	                alert('회원탈퇴가 완료되었습니다.');
+	                window.location.href = '/'; // 필요한 경우 리다이렉트
+	            })
+	            .catch(error => {
+	                console.error('Error:', error);
+	                alert('회원탈퇴 중 오류가 발생했습니다.');
+	            });
+	        }
+	
+	        showNextConfirm();
+	    });
+	</script>
+
+<script>
+	function validateImageSize(input) {
+		const maxWidth = 1000; // 최대 너비 (픽셀)
+		const maxHeight = 1000; // 최대 높이 (픽셀)
+		const errorElement = document.getElementById('imageError');
+	
+		if (input.files && input.files[0]) {
+			const file = input.files[0];
+			const reader = new FileReader();
+	
+			reader.onload = function(e) {
+				const img = new Image();
+				img.onload = function() {
+					if (this.width > maxWidth || this.height > maxHeight) {
+						errorElement.textContent = `이미지 크기는 ${maxWidth}x${maxHeight} 픽셀을 초과할 수 없습니다.`;
+						errorElement.style.display = 'block';
+						input.value = ''; // 파일 선택 초기화
+					} else {
+						errorElement.style.display = 'none';
+					}
+				};
+				img.src = e.target.result;
+			};
+	
+			reader.readAsDataURL(file);
+		}
+	}
+
+	document.getElementById('modifyForm').addEventListener('submit', function(e) {
+	    e.preventDefault(); // 폼 제출을 막습니다.
+	    console.log('Form submission event triggered');
+	
+		const imageInput = document.querySelector('input[name="profileImage"]');
+		
+		if (imageInput.files.length > 0) {
+			const errorElement = document.getElementById('imageError');
+			if (errorElement.style.display !== 'none') {
+				e.preventDefault(); // 폼 제출 방지
+				alert('이미지 크기를 확인해주세요.');
+			}
+		}
+	    var currentPassword = document.getElementById('currentPassword').value;
+	    var newPassword = document.getElementById('newPassword').value;
+	    var newPasswordConfirm = document.getElementById('newPasswordConfirm').value;
+	
+	    if (newPassword !== newPasswordConfirm) {
+	        alert('새 비밀번호가 일치하지 않습니다.');
+	        return;
+	    }
+	
+	    console.log('Sending fetch request to check password');
+	    
+	    var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+	    var csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+	    fetch('/user/checkPassword', {
+	        method: 'POST',
+	        body: JSON.stringify({ password: currentPassword }),
+	        headers: {
+	            'Content-Type': 'application/json',
+	            [csrfHeader]: csrfToken
+	        }
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        console.log('Password check response:', data);
+	        if (data.passwordCorrect) {
+	            alert('개인정보가 수정되었습니다.');
+	            this.submit(); // 비밀번호가 맞으면 폼을 제출합니다.
+	        } else {
+	            alert('현재 비밀번호가 일치하지 않습니다.');
+	        }
+	    })
+	    .catch(error => {
+	        console.error('Error:', error);
+	        alert('오류가 발생했습니다. 다시 시도해 주세요.');
+	    });
+	});
+</script>
+</th:block>
+</html>

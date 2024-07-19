@@ -1,0 +1,50 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<section class="login-wrapper">
+			<div class="login-container" id="content">
+				<h1>LMS 학습관리시스템</h1>
+				<p>로그인 또는 회원가입을 해주세요.</p>
+				<div id="error-message" style="color: red; margin-bottom: 10px;"></div>
+				<form th:action="@{/user/login}" method="post">
+				  	<input type="text" placeholder="이메일" name="username" id="username" required>
+				  	<input type="password" placeholder="비밀번호" name="password" id="password" required>
+				  	<button type="submit" class="btn btn-primary btn-icon-split" style="width: 100%;"><span class="text">로그인</span></button>
+		      		<a class="btn btn-secondary btn-icon-split mt-2" style="width: 100%;" th:href="@{|/user/signup|}"><span class="text">회원가입</span></a>
+				</form>
+		    	<div class="signup-options mt-2">
+		      		<div class="text-center">
+                        <a class="small" th:href="@{|/user/find-id|}">아이디 찾기</a>
+                        <span>ㆍ</span>
+                        <a class="small" th:href="@{|/user/tempPassword|}">비밀번호 찾기</a>
+                    </div>
+		    	</div>
+	  		</div>
+  		</section>
+	</th:block>
+</html>
+<script layout:fragment="script" type="text/javascript">
+	// 로그인 유효성 검사
+	function getParameterByName(name) {
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	
+	document.addEventListener("DOMContentLoaded", function() {
+	    var errorMessage = getParameterByName('message');
+	    if (errorMessage) {
+	        document.getElementById('error-message').innerText = errorMessage;
+	    }
+	});
+	
+    $(document).ready(function() {
+		//임시 비밀번호를 성공적으로 넘기면 얼럿창을 띄어준다.
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('success')) {
+            alert('임시 비밀번호가 성공적으로 전송되었습니다.');
+        }
+    });
+</script>

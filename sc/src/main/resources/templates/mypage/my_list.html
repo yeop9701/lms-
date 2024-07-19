@@ -1,0 +1,64 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+			    <section class="wrapper">
+			        <div class="mypage_wrap">
+						
+						<div class="container-fluid">
+							<div class="row">
+								<div class="course-list-title"><h2>내 강의 목록</h2></div>
+							</div>
+						
+							<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+								<div th:each="entry, loop : ${list.entrySet()}" class="col mb-4">
+									<div class="card h-100" th:onclick="'location.href=\'' + @{|/video/study/list/${entry.key.lecture.id}|} + '\''" style="cursor: pointer;">
+										<img class="card-img-top" th:src="${entry.key.lecture.thumnailUrl}" style="height: 195px;" alt="강의 썸네일">
+										<div class="card-body d-flex flex-column">
+											<div class="card-subtitle mb-2">
+												<span th:if="${lectureVideoPresence[entry.key]}" 
+													  class="text-lg text-gray-700 main_lec_tit"
+													  th:text="${entry.key.lecture.title}"></span>
+												<span th:if="${!lectureVideoPresence[entry.key]}" 
+													  class="text-lg text-gray-700 main_lec_tit">[[${entry.key.lecture.title}]] 강의는 삭제되었습니다.</span>
+											</div>
+											
+											<div class="progress progress-sm mb-2">
+												<div class="progress-bar" role="progressbar" 
+													 th:style="'width:' + ${#numbers.formatDecimal(entry.key.progress * 100, 0, 1)} + '%'" 
+													 th:aria-valuenow="${#numbers.formatDecimal(entry.key.progress * 100, 0, 1)}"
+													 aria-valuemin="0" 
+													 aria-valuemax="100">
+												</div>
+											</div>
+											
+											<div class="d-flex justify-content-between align-items-center">
+												<small th:text="${#temporals.format(entry.key.regDate, 'yyyy-MM-dd')}"></small>
+												<span th:text="${entry.key.progress == 0 ? '0%' : #numbers.formatDecimal(entry.key.progress * 100, 1, 1) + '%'}"></span>
+											</div>
+											
+											<div class="mt-2 d-flex justify-content-between align-items-center">
+												<span th:each="videoProgress : ${entry.value.entrySet()}" class="badge badge-primary mr-1">
+													[[${videoProgress.key}]]강
+												</span>
+												<a th:href="@{|/user/lec/delete/${entry.key.lecture.id}|}" 
+												   onclick="event.stopPropagation(); return confirm('삭제하시겠습니까?');" 
+												   class="btn btn-danger btn-sm">
+													<i class="fas fa-trash"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						
+							<div th:if="${#maps.isEmpty(list)}" class="alert alert-info">
+								수강중인 강의가 없습니다.
+							</div>
+						</div>
+			        </div>
+			    </section>
+		</div>
+	</th:block>
+</html>

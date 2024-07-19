@@ -1,0 +1,61 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+      
+	<th:block layout:fragment="content">
+		<div id="content">
+			<div class="wrapper">
+			  	<section id="qustion" class="mt-5">
+			  		<div class="question-search dataTable-filter" style="display:flex; justify-content:space-between;">
+					<h1 class="mb-4">공지사항</h1>
+<!-- 						<form method="get" th:action="@{|/notice/search|}" class="dataTables_filter"> -->
+<!-- 							<label> -->
+<!-- 								<input class="form-control form-control-sm" type="search" placeholder="궁금한 질문 검색" name="notice-keyword" id="ResearchQuestion"> -->
+<!-- 							</label>	 -->
+<!-- 							<button type="submit" class="btn btn-success btn-icon-split"><span class="text">검색</span></button> -->
+<!-- 						</form> -->
+					</div>
+			  		
+			  		<table class="table table-bordered" style="text-align:center;">
+			        	<caption></caption>
+			        	<thead>
+			        		<tr>
+			        			<th style="width: 20%">제목</th>
+			        			<th style="width: 45%">내용</th>
+			        			<th style="width: 15%">작성자</th>
+			        			<th style="width: 10%">등록일</th>
+								<th style="width: 10%">수정일</th>
+			        		</tr>
+			        	</thead>
+						<tbody>
+				            <tr th:each="notice, loop : ${list}">
+				                <td>
+				                    <a th:href="@{|/notice/detail/${notice.id}|}" 
+				                       th:text="${notice.title}">제목</a>
+				                </td>
+				                <td>
+				                    <a th:href="@{|/notice/detail/${notice.id}|}" 
+				                       th:text="${notice.content}">내용</a>
+				                </td>
+				                <td><a>관리자</a></td>
+				                <td>
+				                    <a th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd')}">
+				                        등록일
+				                    </a>
+				                </td>
+				                <td>
+				                    <a th:text="${#temporals.format(notice.modifyDate, 'yyyy-MM-dd')}">
+				                        수정일
+				                    </a>
+				                </td>
+				            </tr>
+				        </tbody>
+				  	</table>
+			  		<div class="write" sec:authorize="hasRole('ADMIN')">
+						<a th:href="@{/notice/create}" class="write">글쓰기</a>
+			  		</div>
+			  	</section>
+			</div>	
+		</div>
+	</th:block>
+</html>

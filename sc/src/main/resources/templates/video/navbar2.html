@@ -1,0 +1,30 @@
+<div id="nav2">
+	<div>
+		<a href="">커리큘럼</a>
+	</div>
+	
+	<div>
+		<a href="">커뮤니티</a>
+	</div>
+	
+	<div>
+		<a href="">강의노트</a>
+		<div>
+		<table>
+		
+			<tr class="text-center" th:each="note, loop : ${noteList}">
+			
+				<td th:text="${note.content}"></td>
+				<td th:text="${note.videoTime}"></td>
+				<td th:text="${note.createDate}"></td>
+				
+			</tr>
+		
+		</table>
+		</div>
+	</div>
+	
+	<div>
+		<a href=""></a>
+	</div>
+</div>

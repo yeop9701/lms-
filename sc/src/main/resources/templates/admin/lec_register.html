@@ -1,0 +1,28 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+			<section>
+				<div>
+					<div class="tit mb-4 mt-3">
+						<h2>강의 등록</h2>
+					</div>
+				</div>
+		        <form method="post" th:action="@{/lecture/regist}">
+		            <div class="input_box">
+		                <label for="title" class="form-label">강의 제목</label>
+		                <input type="text" class="form-control" id="title" name="title">
+		            </div>
+		            <div class="input_box">
+		                <label for="content" class="form-label">강의 설명</label>
+		                <textarea name="content" class="form-control" style="min-height: 400px !important;"></textarea>
+		            </div>
+					<div>
+						<button type="submit" value="등록" class="btn btn-success btn-icon-split"><span class="text">등록</span></button>
+					</div>
+				</form>
+			</section>
+		</div>
+	</th:block>
+</html>

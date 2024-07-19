@@ -1,0 +1,47 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+		<div id="content">
+		    <section>
+		        <div class="mt-5">
+		            <div><h2>강의 리스트</h2></div>
+		        </div>
+		        <div class="table-responsive">
+		            <table class="table table-bordered" id="dataTable" style="text-align: center;">
+		                <thead>
+		                    <tr>
+		                        <th>No</th>
+		                        <th>제목</th>
+		                        <th>내용</th>
+		                        <th>등록일</th>
+		                        <th>영상등록</th>
+		                        <th>수정</th>
+		                        <th>삭제</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <!-- 루프 -->
+		                    <tr th:each="lecture, loop : ${lecture}">
+								<td>[[${loop.index + 1}]]</td>
+								<td>
+									<a th:href="@{|/video/list/${lecture.id}|}">
+										[[${lecture.title}]]
+									</a>
+								</td>
+								<td>[[${lecture.content}]]</td>
+								<td>[[${lecture.createDate}]]</td>
+								<td><a class="btn btn-success btn-circle" th:href="@{|/video/addVideo/${lecture.id}|}"><i class="fa-solid fa-clapperboard"></i></a></td>
+								<td><a th:href="@{|/lecture/modify/${lecture.id}|}" class="btn btn-info btn-circle"><i class="fa-solid fa-pen-to-square"></i></a></td>
+								<td><a th:href="@{|/lecture/remove/${lecture.id}|}" onclick="return confirm('삭제하시겠습니까?')" class="btn btn-danger btn-circle"><i class="fas fa-trash"></i></a></td>
+							</tr>
+		                </tbody>
+		            </table>
+		        </div>
+		        <div>
+		            <button type="button" class="btn btn-success btn-icon-split" onclick="location.href='/lecture/regist'"><span class="text">등록</span></button>
+		        </div>
+		    </section>
+	    </div>
+	</th:block>
+</html>

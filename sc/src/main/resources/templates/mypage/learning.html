@@ -1,0 +1,42 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+		    <section>
+		        <h2>Home</h2>
+		        <div>
+		            <button type="button" id="leaning">학습중</button>
+		            <button type="button" id="finish">완강</button>
+		        </div>
+		        <div>
+		            <input type="text" placeholder="강의명, 강사명 검색">
+		            <button type="button">검색</button>
+		        </div>
+		        <div>
+		            <select name="sort" id="">
+		                <option value="좋아요 순">좋아요 순</option>
+		                <option value="리뷰 순">리뷰 순</option>
+		                <option value="이름 순">이름 순</option>
+		                <option value="최근 학습 순">최근 학습 순</option>
+		            </select>
+		        </div>
+		        <!-- 강의리스트 -->
+		        <div>
+		            <div>
+		                <div>
+		                    <img src="" alt="">
+		                    <h4>제목</h4>
+		                </div>
+		                <div>
+		                    <div class="bar">
+		
+		                    </div>
+		                    <span>진행률</span>
+		                </div>
+		            </div>
+		        </div>
+		    </section>
+		</div>
+	</th:block>
+</html>

@@ -1,0 +1,21 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+			<div class="wrapper">
+				<section>
+				    <h1 class="mt-5 mb-4">아이디 찾기</h1>
+				    <form th:action="@{/user/find-id}" method="post">
+				        <label for="tellNumber" class="form-label">전화번호:</label>
+				        <input type="text" id="tellNumber" name="tellNumber" class="form-control" required>
+				        <div class="btn_box">
+					        <button class="btn btn-success btn-icon-split" type="submit"><span class="text">아이디 찾기</span></button>
+					        <a href="/user/login" class="btn btn-secondary btn-icon-split"><span class="text">로그인 가기</span></a>
+				        </div>
+				    </form>
+			    </section>
+		    </div>
+	    </div>
+	</th:block>
+</html>

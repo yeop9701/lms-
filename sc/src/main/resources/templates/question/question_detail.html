@@ -1,0 +1,168 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout}">
+
+	<th:block layout:fragment="content">
+
+<div class="wrapper">
+		<div class="mypage_wrap">
+			<div class="container-fluid">
+
+		<div class="card shadow mb-4">
+			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+				<h5 class="m-0 font-weight-bold text-primary" th:text="${question.title}">제목</h5>
+				<div>
+					<button
+						sec:authorize="isAuthenticated()"
+						th:if="${#authentication.principal.username == question.author.email and question.result == false}"
+						th:data-question-id="${question.id}"
+						onclick="confirmResolve(this)"
+						class="btn btn-primary btn-sm">
+						<i class="fas fa-check fa-sm"></i> 해결완료
+					</button>
+					<span th:if="${question.result == true}" class="btn btn-success btn-circle btn-sm">
+						<i class="fa-solid fa-check"></i>
+					</span>
+				</div>
+			</div>
+			<div class="card-body">
+				<div id="viewer"></div>
+			</div>
+			<div class="card-footer">
+				<small class="text-muted" th:text="${'작성일: ' + #temporals.format(question.createDate, 'yyyy-MM-dd HH:mm:ss')}">생성일</small>
+				<small class="text-muted ms-2" th:if="${question.modifyDate != null}" th:text="'수정일: ' + ${#temporals.format(question.modifyDate, 'yyyy-MM-dd')}"></small>
+			</div>
+		</div>
+		<div class="d-flex justify-content-between my-3">
+			<div>
+				<a th:href="@{|/question/modify/${question.id}|}"
+					class="btn btn-outline-secondary"
+					sec:authorize="isAuthenticated()"
+					th:if="${#authentication.principal.username == question.author.email}"
+					th:text="수정"></a>
+				<a th:href="@{|/question/delete/${question.id}|}"
+					class="btn btn-outline-danger"
+					sec:authorize="isAuthenticated()"
+					th:if="${#authentication.principal.username == question.author.email}"
+					th:text="삭제" onclick="return confirm('삭제하시겠습니까?')"></a>
+			</div>
+			<div>
+				<button type="button" class="btn btn-secondary" onclick="location.href='/question/list'">전체질문</button>
+				<button type="button" class="btn btn-secondary" onclick="location.href='/my/question'">내질문</button>
+			</div>
+		</div>
+		<div>
+			
+		</div>
+		
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h5 class="m-0 font-weight-bold text-primary" th:text="'답변 ' + |${#lists.size(answerList)}|"></h5>
+			</div>
+			<div class="card-body">
+				<ul class="list-unstyled">
+					<li th:each="answer : ${answerList}" class="mb-3 pb-3 border-bottom">
+						<div class="d-flex justify-content-between align-items-center mb-2">
+							<strong th:text="${answer.author.name}" class="text-primary"></strong>
+							<small class="text-muted" th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></small>
+						</div>
+						<form th:action="@{|/answer/modify/${answer.id}|}" method="post" th:if="${#authentication.name == answer.author.name}" class="mb-2">
+							<div class="input-group">
+								<input name="content" style="width: calc(100% - 143px) !important; border: none; background: none;" class="form-control answerInput" th:value="${answer.content}" readonly>
+								<div class="input-group-append" style="margin-left: 10px;">
+									<button th:attr="data-id=${answer.id}" class="btn btn-outline-secondary mod_btn" type="button"><i class="fa-regular fa-pen-to-square"></i></button>
+									<button th:attr="data-id=${answer.id}" class="btn btn-outline-primary" type="submit">수정</button>
+									<a th:href="@{|/answer/delete/${answer.id}|}" onclick="return confirm('삭제하시겠습니까?')" class="btn btn-outline-danger"><i class="fa-solid fa-xmark"></i></a>
+								</div>
+							</div>
+						</form>
+						<p th:unless="${#authentication.name == answer.author.name}" th:text="${answer.content}"></p>
+					</li>
+				</ul>
+				<p th:if="${#lists.isEmpty(answerList)}" class="text-center text-muted">
+					답변이 없습니다. 답변을 달아주세요.
+				</p>
+			</div>
+		</div>
+		
+		<div class="card shadow mb-4" sec:authorize="isAuthenticated()">
+			<div class="card-header py-3">
+				<h5 class="m-0 font-weight-bold text-primary">답변 작성</h5>
+			</div>
+			<div class="card-body">
+				<form th:action="@{|/answer/create/${question.id}|}" th:object="${answerCreateForm}" method="post">
+					<div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+						<div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+					</div>
+					<div class="form-group">
+						<textarea th:field="*{content}" class="form-control" rows="5" style="min-height: 400px !important;"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">답변 등록</button>
+				</form>
+			</div>
+		</div>
+		
+		
+
+		</div>
+
+	</div>
+</div>
+	<script th:inline="javascript">
+	    /*<![CDATA[*/
+	    var content = /*[[${question.content}]]*/ '';
+	    /*]]>*/
+	
+	    const viewer = new toastui.Editor.factory({
+	        el: document.querySelector('#viewer'),
+	        viewer: true,
+	        height: 'auto',
+	        initialValue: content,
+	        customHTMLRenderer: {
+	            paragraph(node) {
+	                return {
+	                    type: 'element',
+	                    tagName: 'p',
+	                    attributes: { style: 'font-size: 20px;' },
+	                    children: node.children
+	                };
+	            }
+	        }
+	    });
+	
+	    // Toast UI Editor의 내부 콘텐츠에 스타일 적용
+	    setTimeout(() => {
+	        const contentEl = document.querySelector('#viewer .toastui-editor-contents');
+	        if (contentEl) {
+	            contentEl.style.fontSize = '20px';
+	        }
+	    }, 0);
+	</script>
+
+	<script>
+		$(document).ready(function() {
+			$('.mod_btn').click(function() { 
+				let input = $(this).closest('.input-group').find('.answerInput');
+				if(input.prop("readonly")) {
+					input.prop("readonly", false);
+					input.focus();
+					input.css("border", "1px solid #d1d3e2");
+					input.css("background", "none");
+				} else {
+					input.prop("readonly", true);
+					input.css("border", "none");
+					input.css("background", "none");
+				}
+			});
+		});
+
+		function confirmResolve(button) {
+			var questionId = button.getAttribute('data-question-id');
+			if (confirm("해결이 완료되셨나요?")) {
+				window.location.href = '/question/resolve/' + questionId;
+			}
+		}
+		
+	</script>
+	</th:block>
+</html>

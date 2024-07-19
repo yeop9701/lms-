@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Box 추가 및 제거 예제</title>
+    <style>
+        .input-container {
+            margin-bottom: 10px;
+        }
+        .input-container input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Input Box 추가 및 제거 예제</h1>
+    <form id="input-form">
+        <div id="input-container">
+            <div class="input-container">
+                <input type="text" name="input1[]">
+                <input type="text" name="input2[]">
+                <button type="button" class="remove-button">제거</button>
+            </div>
+        </div>
+        <button type="button" id="add-button">추가</button>
+        <br><br>
+        <button type="submit">제출</button>
+    </form>
+
+    <script>
+        document.getElementById('add-button').addEventListener('click', function() {
+            // 새로운 div 요소 생성
+            var newDiv = document.createElement('div');
+            newDiv.className = 'input-container';
+
+            // 새로운 input 요소 생성
+            var newInput1 = document.createElement('input');
+            newInput1.type = 'text';
+            newInput1.name = 'input1[]';
+
+            var newInput2 = document.createElement('input');
+            newInput2.type = 'text';
+            newInput2.name = 'input2[]';
+
+            // 새로운 제거 버튼 생성
+            var newRemoveButton = document.createElement('button');
+            newRemoveButton.type = 'button';
+            newRemoveButton.className = 'remove-button';
+            newRemoveButton.textContent = '제거';
+
+            // 제거 버튼에 클릭 이벤트 추가
+            newRemoveButton.addEventListener('click', function() {
+                newDiv.remove();
+            });
+
+            // 새로운 input 요소와 제거 버튼을 div에 추가
+            newDiv.appendChild(newInput1);
+            newDiv.appendChild(newInput2);
+            newDiv.appendChild(newRemoveButton);
+
+            // input-container div에 새로운 div 추가
+            document.getElementById('input-container').appendChild(newDiv);
+        });
+
+        // 초기 제거 버튼에 클릭 이벤트 추가
+        document.querySelector('.remove-button').addEventListener('click', function() {
+            this.parentElement.remove();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+	<div id="content" class="container-md mt-5" style="max-width: 800px;">
+	    <!-- 강의이미지 및 간략 설명 -->
+	    <div class="row mb-4">
+			<div id="title" class="col-lg-8">
+				<h4 class="mb-3" th:text="${lecture.title}"></h4>
+				<img class="img-fluid rounded" th:src="${lecture.thumnailUrl}" alt="썸네일이미지" style="max-width: 300px;">
+	        </div>
+	    </div>
+		
+		<button type="button" class="btn btn-primary mb-3" th:attr="onclick=|location.href='/lecture/startlearn/${lecture.id}'|">수강하기</button>
+	    <section class="mb-5">
+	        <div class="card mb-4">
+	            <div class="card-body">
+	                <h3 class="card-title h5">강의 소개</h3>
+	                <p class="card-text" th:text="|${lecture.title} 입니다.|"></p>
+	                <p class="card-text" th:text="${lecture.content}"></p>
+	            </div>
+	        </div>
+	
+	        <div class="card">
+	            <div class="card-body">
+	                <h3 class="card-title h5">커리큘럼</h3>
+	                <span th:text="|총 ${#lists.size(videoList)} 개의 수업|">총 n개, m시간의 수업</span>
+	
+	                <ul class="list-group list-group-flush">
+	                    <li class="list-group-item d-flex flex-row align-items-center justify-content-between" th:each="video, loop : ${videoList}">
+	                        <span th:text="${loop.index + 1} + ': ' + ${video.title}">제목</span>
+							<span th:with="minutes=${video.duration / 60}, seconds=${video.duration % 60}">
+								[[${#numbers.formatInteger(minutes, 2)}]]:[[${#numbers.formatInteger(seconds, 2)}]]
+							</span>
+	                    </li>
+	                </ul>
+	            </div>
+	        </div>
+	    </section>
+	    
+	    <!-- 수강평 -->
+	    <section>
+	    
+	    </section>
+	
+	</div>
+</th:block>
+</html>

@@ -1,0 +1,194 @@
+textarea {
+	width:100%;
+	resize: none;
+}
+
+input[type=submit]{
+	margin-top:10px;
+}
+
+/* 질문 등록 */
+.quset_form{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input_box { margin-bottom: 12px; }
+.input_box:last-child{ margin-bottom: 0; }
+.input_box input,
+.input_box textarea {
+  width: 400px;
+  height: 45px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.btn_box { display: flex; gap: 10px; margin-top:20px; }
+.btn {
+  display: block;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.form-control { width: 100% !important; }
+textarea.form-control { height: 400px !important; resize: none; }
+
+/*회원가입*/
+
+    /* 전체 레이아웃 */
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	font-family: Arial, sans-serif;
+	}
+
+/* 제목 스타일 */
+.title {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	}
+
+/* 입력 필드 스타일 */
+.input-field {
+	width: 300px;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 16px;
+	}
+
+/* 버튼 스타일 */
+.button {
+	width: 300px;
+	padding: 10px;
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	}
+
+
+/*페이징*/
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  .pagination li {
+    margin: 0 5px;
+  }
+
+  .pagination li a {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    color: #333;
+    text-decoration: none;
+  }
+
+  .pagination li.active a {
+    background-color: #333;
+    color: #fff;
+  }
+
+/*게시판 리스트*/
+.search {
+	display: flex;
+	margin: 40px 15%;
+	}
+.search input[type="text"] {
+	padding: 15px;
+	border: 2px solid #ccc;
+	border-radius: 10px 0 0 10px;
+	flex-grow: 1;
+	}
+
+.search button {
+	padding: 10px 5%;
+	background-color: #00c853;
+	color: #fff;
+	border: none;
+	border-radius: 0 10px 10px 0;
+	cursor: pointer;
+	}
+
+.write { 
+	text-align: right;
+	margin: 20px; 
+	}
+.write a {
+	display: inline-block;
+	padding: 10px 5%;
+	background-color: rgb(0, 128, 192);
+	color: #fff;
+	text-decoration: none;
+	border-radius: 5px;
+	}
+	
+.tbl2 {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0rem auto;
+}
+
+ /* 테이블 행 */
+.tbl2 th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.tbl2 th {
+  background-color: #1b1b1b;
+  color: #ddd;
+}
+
+.question-search {
+	text-align:right;
+}
+
+.card-body-p {
+	display: block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.tbl2{
+	margin: 20px;
+}
+/* .tbl2{ */
+/* 	margin: 20px; */
+/* } */

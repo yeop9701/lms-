@@ -1,0 +1,40 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+			<section>
+				<div>
+					<div class="tit">
+						<h2>강의 수정</h2>
+					</div>
+				</div>
+				<form method="post" th:action="@{|/lecture/modify/${lecture.id}|}" enctype="multipart/form-data">
+		            <div class="input_box">
+		                <label for="title" class="form-label">강의 제목</label>
+		                <input type="text" id="title" name="title" th:value="${lecture.title}">
+		            </div>
+		            <div class="input_box">
+		                <label for="content" class="form-label">강의 설명</label>
+		                <textarea id="content" name="content" style="min-height: 400px !important;">[[${lecture.content}]]</textarea>
+		            </div>
+					<div>
+					<div class="input_box">
+				        <label>프로필 이미지</label>
+				        <input type="file" name="thumnailUrl" accept="image/thumnail/*" />
+				    </div>
+				    
+				    <!-- 현재 프로필 이미지 표시 (있는 경우) -->
+				    <div class="input_box" th:if="${lecture.thumnailUrl != null}">
+				        <label>현재 프로필 이미지</label>
+				        <img th:src="${lecture.thumnailUrl}" alt="현재 프로필 이미지" style="width: 100px; height: 100px;" />
+				    </div>
+					</div>
+					<div>
+						<button type="submit" value="등록" class="btn btn-success btn-icon-split"><span class="text">등록</span></button>
+					</div>
+				</form>
+			</section>
+		</div>
+	</th:block>
+</html>

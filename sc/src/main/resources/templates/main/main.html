@@ -1,0 +1,105 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment=content>
+		<div id="myModal" class="modal_all">
+		    <div class="modal-content_1">
+		        <p><strong style="color: red;">크롬 기반</strong>으로 제작된 사이트입니다.<br><strong style="color: red;">크롬</strong>으로 이용해주세요.</p>
+		        <button class="close-btn btn btn-secondary"><span class="text">닫기</span></button>
+		        <button class="close-day-btn btn btn-secondary"><span class="text">하루동안 닫기</span></button>
+		    </div>
+		</div>
+		<div id="content">
+		    <section class="wrapper" style="position: relative;">
+		        <div class="tit mt-4 mb-4"><h2>강의 리스트</h2></div>
+				<div class="swiper mySwiper" style="max-width: 1380px;">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" th:each="lecture, loop : ${userLecture}">
+							<div class="card" th:onclick="'location.href=\'' + @{|/lecture/detail/${lecture.key.id}|} + '\''" style="cursor: pointer;">
+								<img class="thumnail" th:src="${lecture.key.thumnailUrl}" alt="썸네일이미지">
+								<div class="card-subtitle d-flex align-items-start flex-sm-column p-2">
+									<a th:href="@{|/lecture/detail/${lecture.key.id}|}" class="text-lg text-gray-700 main_lec_tit">[[${lecture.key.title}]]</a>
+									<input type="hidden" id="lecId" th:value="${lecture.key.id}">
+									<span>[[${lecture.value} + ' 명 수강중']]</span>
+									<span class="text-primary font-weight-bold">무료</span>
+									<div class="badge-wrap">
+										<span class="btn-warning text-gray-100">새강의</span>
+									</div>
+									<a th:href="@{|/lecture/startlearn/${lecture.key.id}|}" id="reglec" class="text-gray-100 btn btn-success btn-icon-split p-1 mt-1 mb-1 border-radious-1" th:data-lecture-id="${lecture.key.id}">
+										수강신청
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-pagination" style="position: relative; display: block; margin-top: 30px;"></div>
+				</div>
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+		    </section>
+		    <!-- 강의 리스트 === E -->
+		</div>
+		<script>
+		    window.onload = function() {
+		        var modal = document.getElementById("myModal");
+		        var closeBtn = document.getElementsByClassName("close-btn")[0];
+		        var closeDayBtn = document.getElementsByClassName("close-day-btn")[0];
+		
+		        if (!localStorage.getItem('modalClosed') || 
+		            Date.now() > parseInt(localStorage.getItem('modalClosed'))) {
+		            modal.style.display = "block";
+		        }
+		
+		        closeBtn.onclick = function() {
+		            modal.style.display = "none";
+		        }
+		
+		        closeDayBtn.onclick = function() {
+		            modal.style.display = "none";
+		            localStorage.setItem('modalClosed', Date.now() + 86400000); // 24시간
+		        }
+		
+		        window.onclick = function(event) {
+		            if (event.target == modal) {
+		                modal.style.display = "none";
+		            }
+		        }
+		    }
+		</script>
+		<script>
+			var swiper = new Swiper(".mySwiper", {
+			    slidesPerView: 5, // 한 화면에 보이는 슬라이드 수
+			    loop: true, // 무한 루프
+			    spaceBetween: 20,
+			    pagination: {
+			        el: ".swiper-pagination",
+			        clickable: true,
+			    },
+			    navigation: {
+			        nextEl: ".swiper-button-next",
+			        prevEl: ".swiper-button-prev",
+			    },
+			    breakpoints: {
+			        // 반응형 설정
+			        1279: {
+			            slidesPerView: 5,
+			        },
+			        1024: {
+			            slidesPerView: 4,
+			        },
+			        768: {
+			            slidesPerView: 3,
+			        },
+			        480: {
+			            slidesPerView: 2,
+			        },
+			        0: {
+			            slidesPerView: 1,
+			        }
+			    },
+			});
+		</script>
+	</th:block>
+</html>
+
+

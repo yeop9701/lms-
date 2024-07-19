@@ -1,0 +1,38 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+		    <section>
+		        <div>
+		            <div class="mt-5 mb-3"><h2>영상 리스트</h2></div>
+		        </div>
+		       <div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" style="text-align: center;">
+		                <thead>
+		                    <tr>
+		                        <th>강의 아이디</th>
+		                        <th>영상 제목</th>
+		                        <th>소스코드</th>
+		                        <th>영상시간</th>
+		                        <th>삭제</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <!-- 루프 -->
+		                    <tr th:each="video, loop : ${vidList}">
+								<td>[[${video.lecture.id}]]</td>
+								<td>
+									[[${video.title}]]
+								</td>
+								<td>[[${video.url}]]</td>
+								<td>[[${video.duration}]]</td>							
+								<td><a th:href="@{|/video/delete/${video.id}|}" onclick="return confirm('삭제하시겠습니까?')" class="btn btn-danger btn-circle"><i class="fas fa-trash"></i></a></td>
+							</tr>
+		                </tbody>
+		            </table>
+		        </div>
+		    </section>
+	    </div>
+	</th:block>
+</html>

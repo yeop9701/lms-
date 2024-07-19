@@ -1,0 +1,56 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div id="content">
+			<div class="wrapper">
+				<section class="notice_form">
+					<div>
+			            <div class="mt-5 mb-3"><h2>공지사항 작성</h2></div>
+			        </div>
+					<form th:object="${noticeCreateForm}" method="post">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						<!--//오류 메세지 표시-->
+						<div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+							<div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+						</div>
+						
+						<div class="input_box">
+							<label for="title" class="form-label">제목</label>
+							<input type="text" th:field="*{title}" class="form-control">
+						</div>
+						<div class="editor_wrap">
+							<label for="content" class="form-label">내용</label>
+							<p class="my-3 border-bottom pb-2">코드가 포함된 질문은 이미지보다 'code', 'codeblock'을 이용하시면 더 정확하게 답변 받을 수 있어요.</p>
+							<div id="editor"></div>
+							<input type="hidden" th:field="*{content}" class="form-control">
+						</div>
+						<div class="btn_box">
+							<button type="submit" value="등록" class="btn btn-success btn-icon-split"><span class="text">등록</span></button>
+							<button type="button" value="취소" class="btn btn-secondary btn-icon-split" onclick="window.history.back();"><span class="text">취소</span></button>
+						</div>
+					</form>
+				</section>
+			</div>		
+		</div>	
+	<script th:inline="javascript">
+		// hidden input의 값을 가져옵니다.
+		var contentInput = document.querySelector('input[name="content"]');
+		var initialContent = contentInput ? contentInput.value : '';
+	
+		// Toast UI 에디터를 초기화합니다.
+		const editor = new toastui.Editor({
+			el: document.querySelector('#editor'),
+			height: '500px',
+			initialEditType: 'markdown',
+			previewStyle: 'vertical',
+			initialValue: initialContent
+		});
+	
+		// 폼 제출 시 에디터 내용을 hidden input에 저장합니다.
+		document.querySelector('form').addEventListener('submit', function(e) {
+			contentInput.value = editor.getMarkdown();
+		});
+	</script>
+	</th:block>
+</html>

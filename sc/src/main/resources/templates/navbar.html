@@ -1,0 +1,122 @@
+<!-- Sidebar -->
+<ul th:fragment="navbar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+	<li>
+	    <!-- Sidebar - Brand -->
+	    <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{|/|}">
+	    	<span class="logo"></span>
+	    </a>
+	
+	    <!-- Divider -->
+	    <hr class="sidebar-divider my-0">
+	
+	    <!-- Divider -->
+	    <hr class="sidebar-divider">
+	
+	    <!-- Heading -->
+	    <div class="sidebar-heading">
+	        메뉴
+	    </div>
+	
+	    <!-- Nav Item - Pages Collapse Menu -->
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/|}">
+	            <i class="fas fa-fw fa-cog"></i>
+	            <span>강의</span>
+	        </a>
+	    </div>
+	
+	    <!-- Nav Item - Utilities Collapse Menu -->
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/question/list|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>질문 게시판</span>
+	        </a>
+	    </div>
+		
+		<!-- Nav Item - Utilities Collapse Menu -->
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/notice/list|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>공지사항</span>
+	        </a>
+	    </div>
+	    <!-- Divider -->
+	    <hr class="sidebar-divider">
+    </li>
+    <li sec:authorize="isAuthenticated">
+    	<div class="sidebar-heading">
+	        회원
+	    </div>
+	     <!-- Nav Item - Dashboard -->
+	    <div class="nav-item">
+	        <a class="nav-link" th:href="@{|/my/dashboard|}">
+	            <i class="fas fa-fw fa-tachometer-alt"></i>
+	            <span>대시보드</span>
+	        </a>
+	    </div>
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/my/list|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>내 학습</span>
+	        </a>
+	    </div>
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/note/list|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>내 노트</span>
+	        </a>
+	    </div>
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/my/question|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>내 질문</span>
+	        </a>
+	    </div>
+	    <hr class="sidebar-divider">
+    </li>
+    <li sec:authorize="hasRole('ADMIN')">
+    	<div class="sidebar-heading">
+	        관리자
+	    </div>
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/admin/lecList|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>강의 정보</span>
+	        </a>
+	    </div>
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/admin/userList|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>유저 정보</span>
+	        </a>
+	    </div>
+	    <div class="nav-item">
+	        <a class="nav-link collapsed" th:href="@{|/admin/vidList|}">
+	            <i class="fas fa-fw fa-wrench"></i>
+	            <span>영상 정보</span>
+	        </a>
+	    </div>
+    </li>
+	<script>
+		$(document).ready(function() {
+		    var currentUrl = window.location.pathname;
+		    var gnbBtn = $('.nav-item > a');
+	
+		    gnbBtn.each(function() {
+		        var href = $(this).attr('href');
+		        if (href === '/') {
+		            // 루트 경로인 경우 정확히 일치할 때만 'on' 클래스 추가
+		            if (currentUrl === '/') {
+		                $(this).addClass('on');
+		            }
+		        } else {
+		            // 다른 경로의 경우 현재 URL이 해당 href로 시작하는지 확인
+		            if (currentUrl.startsWith(href)) {
+		                $(this).addClass('on');
+		            }
+		        }
+		    });
+		});
+	</script>
+</ul>
+<!-- End of Sidebar -->

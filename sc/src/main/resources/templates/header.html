@@ -1,0 +1,72 @@
+<header id="header" class="normal_header">
+	<div class="wrapper">
+	    <a th:href="@{|/|}" class="btn btn-primary btn-icon-split mainGo" style="display: none">
+			<span class="text">메인으로 가기</span>
+		</a>
+		<div class="util" sec:authorize="isAnonymous">
+			<a th:href="@{/user/login}">로그인</a>
+			<a th:href="@{/user/signup}">회원가입</a>
+		</div>
+		<!-- Topbar Navbar -->
+		<ul class="navbar-nav ml-auto" sec:authorize="isAuthenticated()">
+			<!-- Nav Item - User Information -->
+			<li class="nav-item dropdown no-arrow" style="display: flex; align-items: center; gap: 10px;">
+				
+				<a class="nav-link dropdown-toggle my" href="javascript:void(0)" id="userDropdown" role="button"
+					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="mr-2 d-none d-lg-inline text-gray-600 small">[[${#authentication.principal.name}]] 님</span>
+					<img class="img-profile rounded-circle" 
+						th:src="${#authentication.principal.profileImage != null && !#authentication.principal.profileImage.isEmpty()} 
+								? @{${#authentication.principal.profileImage}} 
+								: @{/images/user/undraw_profile.svg}"
+						alt="Profile Image">
+				</a>
+			
+				<!-- Dropdown - User Information -->
+				<div class="dropMenu">
+					<a class="dropdown-item" th:href="@{|/my/list|}">
+						<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+						내 학습
+					</a>
+					<a class="dropdown-item" th:href="@{|/note/list|}">
+						<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+						강의노트
+					</a>
+					<a class="dropdown-item" th:href="@{|/my/dashboard|}">
+						<i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+						대시보드
+					</a>
+					<a class="dropdown-item" th:href="@{|/user/mypage|}">
+						<i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+						마이페이지
+					</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" sec:authorize="isAuthenticated" th:href="@{/user/logout}">
+						<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+						Logout
+					</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<script layout:fragment="script" type="text/javascript">
+		$(document).ready(function() {
+			let dropMenu = $('.dropMenu');
+			let my = $('.my');
+			
+			my.click(function(){
+				dropMenu.fadeToggle();
+			});
+			
+			//undraw_profile
+			let img_profile = $('.img-profile');
+			if(img_profile.attr('src').includes("undraw_profile")){
+				$('.img-profile').css('opacity', '0.5');
+			} else{
+				$('.img-profile').css('opacity', '1');
+			}
+		});
+		
+			
+	</script>
+</header>

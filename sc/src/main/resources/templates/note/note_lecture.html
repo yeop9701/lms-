@@ -1,0 +1,69 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+    <section class="wrapper">
+        <div class="mypage_wrap">
+            <div class="container-fluid" id="content">
+                <div class="note">
+                    <h2 class="mb-4">강의 노트</h2>
+                    <div id="note" class="card shadow mb-4" th:each="entry : ${noteList.entrySet()}">
+                        <div class="card-header">
+                            <h5 th:text="${entry.key.title}"></h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li th:each="note, noteStat : ${entry.value}" class="py-2">
+                                    <div class="py-1 d-flex flex-row align-items-center justify-content-between">
+                                        <a th:href="@{|/video/viewer/${note.video.id}?n=${note.id}|}" class="text-gray-700"
+                                        th:with="minutes=${note.videoTime / 60},
+                                        seconds=${note.videoTime % 60}">
+                                        <i class="fa-solid fa-play"></i> [[${#numbers.formatInteger(minutes, 2) + ':' + #numbers.formatInteger(seconds, 2)}]]
+                                        </a>
+                                        <div>
+                                            <a th:href="@{|/note/delete/${note.id}|}" onclick="return confirm('삭제하시겠습니까?')" class="btn btn-danger">삭제</a>
+                                        </div>
+                                    </div>
+                                    <div th:id="'viewer-' + ${noteStat.index}" th:data-content="${note.content}"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script th:inline="javascript">
+		document.addEventListener('DOMContentLoaded', function() {
+			const viewers = document.querySelectorAll('[id^="viewer-"]');
+			viewers.forEach(function(viewerEl) {
+				const content = viewerEl.getAttribute('data-content');
+				new toastui.Editor.factory({
+					el: viewerEl,
+					viewer: true,
+					height: 'auto',
+					initialValue: content,
+					customHTMLRenderer: {
+						paragraph(node) {
+							return {
+								type: 'element',
+								tagName: 'p',
+								attributes: { style: 'font-size: 20px;' },
+								children: node.children
+							};
+						}
+					}
+				});
+				
+				// Toast UI Editor의 내부 콘텐츠에 스타일 적용
+				setTimeout(() => {
+					const contentEl = viewerEl.querySelector('.toastui-editor-contents');
+					if (contentEl) {
+						contentEl.style.fontSize = '20px';
+					}
+				}, 0);
+			});
+		});
+	</script>
+</th:block>
+</html>

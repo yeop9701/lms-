@@ -1,0 +1,200 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout}">
+	<th:block layout:fragment="content">
+		<div class="wrapper">
+		    <section id="sign">
+		    	<div id="content" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+		        <h2 class="title">회원가입</h2>
+			        <form th:action="@{/user/signup}" method="post" id="joinForm">
+			            <div class="input_box email">
+			                <input type="text" id="email" name="email" placeholder="이메일">
+			                <button type="button" onclick="idChk()" class="btn btn-secondary btn-icon-split"><span class="text">중복확인</span></button>
+			            </div>
+			            <div class="input_box">
+			                <input type="password" oninput="pwChk();" id="pwd" name="password1" placeholder="비밀번호">
+			            </div>
+			            <div class="input_box">
+			                <input type="password" oninput="pwChk();" id="pwd_check" name="password2" placeholder="비밀번호 확인">
+							<p id="pwConfirm" style="display: none;"></p>
+							<p>비밀번호는 영문, 숫자, 특수기호를 포함되게 입력하세요.</p>
+			            </div>
+			            <div class="input_box" >
+			                <input type="text" name="name" id="name" placeholder="이름">
+			            </div>
+			            <div class="input_box email">
+			                <input type="text" name="tellNumber" id="phone" placeholder="전화번호">
+							<button type="button" onclick="tellCheck()" class="btn btn-secondary btn-icon-split"><span class="text">중복확인</span></button>
+			            </div>
+						<p>-를 빼고 입력해주세요.</p>
+			          	<div class="btn_box" style="flex-direction: column;">
+				            <button type="submit" id="joinBtn" class="btn btn-primary btn-icon-split"><span class="text">회원가입</span></button>
+				            <button type="button" onclick="location.href='/../user/login'" class="btn btn-secondary btn-icon-split"><span class="text">돌아가기</span></button>
+			            </div>
+			        </form>
+		        </div>
+		    </section>
+	    </div>
+		<script>
+			// 중복체크 결과를 저장할 변수
+			let isEmailChecked = false;
+			let isPhoneChecked = false;
+
+			// 이메일 유효성 검사 함수
+			function isValidEmail(email) {
+				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				return emailRegex.test(email);
+			}
+
+			// 아이디(이메일) 중복 체크 함수
+			function idChk() {
+				let email = $('#email').val();
+				
+				if (!isValidEmail(email)) {
+					alert("올바른 이메일 형식이 아닙니다.");
+					return;
+				}
+				
+				$.ajax({
+					type: "POST",
+					url: "/user/emailCheck",
+					data: {email: email},
+					success: function(result) {
+						if(result === "true") {
+							alert("사용 가능한 이메일입니다.")
+							isEmailChecked = true;
+						} else {
+							alert("이미 사용 중인 이메일입니다.")
+							isEmailChecked = false;
+						}
+					},
+					error: function() {
+						alert("이메일 중복체크 중 오류가 발생했습니다.")
+						isEmailChecked = false;
+					}
+				});
+			}
+
+			// 전화번호 중복 체크 함수
+			function tellCheck() {
+				let tellNumber = $('#phone').val();
+				console.log("Original number:", tellNumber);
+			
+				// 전화번호 유효성 검사
+				let phoneRegex = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
+			
+				if (!phoneRegex.test(tellNumber)) {
+					alert("올바른 전화번호 형식이 아닙니다. 다시 확인해주세요.");
+					return;
+				}
+			
+				// 하이픈 제거
+				let cleanTellNumber = tellNumber.replace(/-/g, '');
+				console.log("Cleaned number:", cleanTellNumber);
+			
+				$.ajax({
+					type: "GET",
+					url: "/user/phoneCheck",
+					data: {tellNumber: cleanTellNumber},  // 하이픈이 제거된 번호 사용
+					success: function(result) {
+						console.log("Raw response:", result);
+						if (result.trim() === "true") {
+							console.log("Parsed result: true");
+							alert("사용 가능한 전화번호입니다.");
+							isPhoneChecked = true;
+						} else if (result.trim() === "false") {
+							console.log("Parsed result: false");
+							alert("이미 회원가입한 전화번호입니다.");
+							isPhoneChecked = false;
+						} else {
+							console.log("Unexpected result");
+							alert("예상치 못한 응답을 받았습니다.");
+							isPhoneChecked = false;
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log("AJAX error:", textStatus, errorThrown);
+						alert("전화번호 중복체크 중 오류가 발생했습니다.");
+						isPhoneChecked = false;
+					}
+				});
+			}
+
+
+			// 비밀번호 유효성 검사 함수
+			function isValidPassword(password) {
+				// 8자리 이상, 특수문자 포함 여부 확인
+				const passwordRegex = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+				return passwordRegex.test(password);
+			}
+
+			// 비밀번호 일치 확인 함수
+			function pwChk() {
+				let pwInput = document.getElementById('pwd');
+				let pwChkInput = document.getElementById('pwd_check');
+				
+				if (pwInput.value.trim() === '' || pwChkInput.value.trim() === '') {
+					$('#pwConfirm').text('비밀번호를 입력해 주세요.').css('color', 'red').css('display', 'block');
+					return false;
+				}
+				
+				if (!isValidPassword(pwInput.value)) {
+					$('#pwConfirm').text('비밀번호는 8자리 이상이며, 특수문자를 포함해야 합니다.').css('color', 'red').css('display', 'block');
+					return false;
+				}
+				
+				if(pwInput.value == pwChkInput.value) {
+					$('#pwConfirm').text('비밀번호 일치').css('color', 'green').css('display', 'block');
+					return true;
+				} else {
+					$('#pwConfirm').text('비밀번호 불일치').css('color', 'red').css('display', 'block');
+					return false;        
+				}
+			}
+
+			// 문서 준비 완료 시 실행되는 함수
+			$(document).ready(function() {
+				// 폼 제출 이벤트 핸들러
+				$('#joinForm').on('submit', function(e) {
+					if(!pwChk()) {
+						e.preventDefault();
+						alert('비밀번호가 일치하지 않습니다.');
+						$('#pwd_check').focus();
+						return;
+					}
+					
+					if(!isEmailChecked) {
+						e.preventDefault();
+						alert('이메일 중복체크를 해주세요.');
+						return;
+					}
+					
+					if(!isPhoneChecked) {
+						e.preventDefault();
+						alert('전화번호 중복체크를 해주세요.');
+						return;
+					}
+					
+					let input1 = $('#email').val();
+					let input2 = $('#pwd').val();
+					let input3 = $('#phone').val();
+					let input4 = $('#name').val();
+					if(input1.trim() === '' || input2.trim() === '' || input3.trim() === '' || input4.trim() === ''){
+						e.preventDefault(); 
+						alert('모든 정보를 입력해주세요.');
+					}
+				});
+
+				// 이메일 입력 시 중복체크 상태 리셋
+				$('#email').on('input', function() {
+					isEmailChecked = false;
+				});
+
+				// 전화번호 입력 시 중복체크 상태 리셋
+				$('#phone').on('input', function() {
+					isPhoneChecked = false;
+				});
+			});
+		</script>
+	</th:block>
+</html>

@@ -1,0 +1,33 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+<div id="content">
+
+
+<section class="wrapper">
+	<div class="mypage_wrap">
+		<div class="container-fluid" id="content">
+			<div class="row">
+				<div class="course-list-title"><h2>강의노트</h2></div>
+			</div>
+			<div th:if="${not #maps.isEmpty(noteList)}">
+				<div id="note" class="card shadow mb-4" th:each="entry : ${noteList.entrySet()}">
+					<div class="card-header">
+						<div onclick="location.href=this.querySelector('a').href" style="cursor: pointer;">
+							<a th:href="@{|/note/list/${entry.key.id}|}" th:text="${entry.key.title}" class="py-3 d-block">
+							</a>
+							<p th:text="'노트 수 : ' + ${entry.value}"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:if="${#maps.isEmpty(noteList)}" class="alert alert-info">
+				작성하신 노트가 없습니다.
+			</div>
+		</div>
+	</div>
+</section>
+</div>
+</th:block>
+</html>

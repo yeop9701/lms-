@@ -1,0 +1,66 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+		<div id="content" class="video">
+			<section>
+				<div>
+					<div class="tit mb-4 mt-3">
+						<h2>영상 등록</h2>
+						
+					</div>
+				</div>
+		        <form method="post" th:action="@{|/video/addVideo/${lecture.id}|}">
+		            <div id="video_container">
+		            	<div>
+							<div class="input_box">
+				                <label for="title" class="form-label">영상 제목</label>
+				                <input type="text" class="form-control" id="title" name="title[]">
+				            </div>
+				            <div class="input_box">
+				                <label for="url" class="form-label">영상 소스코드</label>
+				                <input type="text" class="form-control" id="url" name="url[]">
+				            </div>
+			            </div>
+					</div>
+					<div class="btn_box">
+						<button type="submit" class="btn btn-success btn-icon-split"><span class="text">등록</span></button>
+						<button type="button" class="btn btn-warning btn-icon-split" id="add-button"><span class="text">영상 추가 등록</span></button>
+					</div>
+				</form>
+			</section>
+		</div>
+	</th:block>
+</html>
+
+<script layout:fragment="script" type="text/javascript">
+	$(document).ready(function() {
+	  let inputBoxTemplate = `
+	    <div id="input_box">
+	      <div class="input_box">
+	        <label for="title" class="form-label">영상 제목</label>
+	        <input type="text" class="form-control" id="title" name="title[]">
+	      </div>
+	      <div class="input_box">
+	        <label for="url" class="form-label">영상 소스코드</label>
+	        <input type="text" class="form-control" id="url" name="url[]">
+	      </div>
+	      <button type="button" class="btn btn-danger btn-icon-split"><span class="text">삭제</span></button>
+	    </div>
+	  `;
+
+	  $('#add-button').click(function() {
+	    $('#video_container').append(inputBoxTemplate);
+
+	    // 새로 추가된 "삭제" 버튼에 이벤트 리스너 등록
+	    $('.btn-danger').off('click').click(function() {
+	      $(this).closest('#input_box').remove();
+	    });
+	  });
+
+	  // 초기 "삭제" 버튼에 이벤트 리스너 등록
+	  $('.remove-button').click(function() {
+	    $(this).closest('#input_box').remove();
+	  });
+	});
+</script>

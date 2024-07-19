@@ -1,0 +1,74 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+    layout:decorate="~{layout}">
+<th:block layout:fragment="content">
+<div id="content">
+
+
+<section class="wrapper">
+    <div class="mypage_wrap">
+        <div class="container-fluid" id="content">
+            <div class="row">
+                <div class="course-list-title"><h2>내 질문 목록</h2></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4" th:each="question : ${questionList}">
+                    <div class="card shadow h-100">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary" th:text="${question.title}"></h6>
+                            <div class="dropdown no-arrow">
+                                <span th:if="${question.result == false}" class="btn btn-warning btn-circle btn-sm"><i class="fa-solid fa-question"></i></span>
+                                <span th:if="${question.result == true}" class="btn btn-success btn-circle btn-sm"><i class="fa-solid fa-check"></i></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-body-p" th:text="${question.content}" style="width: 90%;"></p>
+                            <p class="text-danger small" 
+                                th:if="${question.answerList != null and !#lists.isEmpty(question.answerList)}" 
+                                th:text="'답변 수: ' + ${#lists.size(question.answerList)}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted" th:text="'작성자: ' + ${question.author.name}"></small>
+                                <div>
+                                    <small class="text-muted" th:text="'등록일: ' + ${#temporals.format(question.createDate, 'yyyy-MM-dd')}"></small>
+                                    <small class="text-muted ms-2" th:if="${question.modifyDate != null}" th:text="'수정일: ' + ${#temporals.format(question.modifyDate, 'yyyy-MM-dd')}"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <a th:href="@{|/question/detail/${question.id}|}" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(questionList)}" class="alert alert-info">
+                작성하신 질문이 없습니다.
+            </div>
+            
+            <div class="page" th:if="${!questionList.isEmpty()}">
+                        
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!questionList.hasPrevious} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${questionList.number-1}|}">
+                            <span>이전</span>
+                        </a>
+                    </li>
+                    <li th:each="page: ${#numbers.sequence(0, questionList.totalPages-1)}"
+                        th:if="${page >= questionList.number-5 and page <= questionList.number+5}"
+                        th:classappend="${page == questionList.number} ? 'active'" class="page-item">
+                        <a th:text="${page+1}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${!questionList.hasNext} ? 'disabled'">
+                        <a class="page-link" th:href="@{|?page=${questionList.number+1}|}">
+                            <span>다음</span>
+                        </a>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+</th:block>
+</html>
